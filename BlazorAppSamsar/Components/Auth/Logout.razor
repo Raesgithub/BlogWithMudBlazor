@@ -1,0 +1,11 @@
+﻿@page "/auth/logout"
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@code{
+    [CascadingParameter] public HttpContext httpContext { get; set; } = default!;
+    protected override async Task OnInitializedAsync()
+    {
+        await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        httpContext.Response.Redirect("/");
+    }
+}

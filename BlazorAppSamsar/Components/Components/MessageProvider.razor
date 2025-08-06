@@ -1,0 +1,35 @@
+﻿@inherits LayoutComponentBase
+
+@code {
+    public class MessageState
+    {
+        public string Text { get; set; } = string.Empty;
+        public string AlertType { get; set; } = "ok";
+
+        public event Action OnChange;
+
+        public void SetMessage(string text, string alertType)
+        {
+            Text = text;
+            AlertType = alertType;
+            NotifyStateChanged();
+        }
+
+        private void NotifyStateChanged() => OnChange?.Invoke();
+    }
+
+    private MessageState messageState = new MessageState();
+
+    protected override void OnInitialized()
+    {
+        // Initialize any state if needed
+    }
+}
+
+<CascadingValue Value="@messageState">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+}

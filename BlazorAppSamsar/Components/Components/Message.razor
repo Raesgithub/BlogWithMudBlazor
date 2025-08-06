@@ -1,0 +1,43 @@
+﻿
+@rendermode @(new InteractiveServerRenderMode(false))
+@inject  IJSRuntime js
+
+
+
+
+@code {
+    [Parameter] public string Text { get; set; } = "";
+    [Parameter] public string AlertType { get; set; } = "ok";
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(Text))
+        {
+            
+            Text = Text.Split("&&&")[0];
+            if (AlertType.ToLower() == "warning")
+            {
+                await js.InvokeVoidAsync("alertWarning", "OK", Text);
+            }
+            else if (AlertType.ToLower() == "error")
+            {
+                await js.InvokeVoidAsync("alertError", "ERROR", Text);
+            }
+            else if (AlertType.ToLower() == "info")
+            {
+                await js.InvokeVoidAsync("alertInfo", "INFO", Text);
+            }
+            else
+            {
+                await js.InvokeVoidAsync("alertOk", "OK", Text);
+            }
+            Text = "";
+            AlertType = "";
+            // Clear the message after showing it
+
+
+        }
+    }
+    
+}
