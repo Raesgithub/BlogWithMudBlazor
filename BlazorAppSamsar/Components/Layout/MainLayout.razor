@@ -2,14 +2,10 @@
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using Microsoft.AspNetCore.Components.Authorization
 @inherits LayoutComponentBase
-@* Required *@
+
 <MudThemeProvider />
 <MudPopoverProvider />
-
-@* Needed for dialogs *@
 <MudDialogProvider />
-
-@* Needed for snackbars *@
 <MudSnackbarProvider />
 
 <div class="container-fluid">
@@ -18,7 +14,6 @@
         <div class="col-12 px-1 ">
 
             <MudLayout>
-                @* <div > *@
 
 
                 <BlazorAppSamsar.Components.Components.Menu />
