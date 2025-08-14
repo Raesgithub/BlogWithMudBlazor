@@ -3,35 +3,64 @@
 @using BlazorAppSamsar.Models
 @using BCrypt.Net;
 
-<PageTitle>Home</PageTitle>
+<PageTitle>ثبت نام</PageTitle>
 <div class="row">
-    <div class="col-md-8 col-xl-6 mx-auto p-3 mt-3 border shadow">
+    <div class="col-md-8 col-xl-4 mx-auto p-3 mt-3 border shadow">
+        <div class="card border border-light-subtle rounded-3 shadow-sm">
+            <div class="card-body p-3 p-md-4 p-xl-5">
+        <MudIcon Icon="@Icons.Material.Filled.PersonAdd" Color="Color.Success" Size="Size.Large" Style="margin:auto;display:block"/>
+
+        <h1 class="text-center mt-3">ثبت نام در مقال جو</h1>
+        <p class="text-center mb-3">رایگان ثبت نام کنید و دانش خود را به اشتراک بگدارید</p>
         <EditForm Model="AppUser" Enhance FormName="f1" OnValidSubmit="RegisterClick">
             <DataAnnotationsValidator/>
-            <div class="mt-3">
-                <label class="form-label">Username</label>
-                <InputText @bind-Value="AppUser.Username" class="form-control"/>
-                <ValidationMessage For="()=>AppUser.Username"/>
-            </div>
-            <div class="mt-3">
-                <label class="form-label">name and family</label>
-                <InputText @bind-Value="AppUser.NickName" class="form-control" />
-                <ValidationMessage For="() => AppUser.NickName" />
-            </div>
-            <div class="mt-3">
-                <label class="form-label">Password</label>
-                <InputText type="password" @bind-Value="AppUser.Password" class="form-control" />
-                <ValidationMessage For="() => AppUser.Password" />
-            </div>
-            <div class="mt-3">
-                <button class="btn btn-success" type="submit">Register</button>
+            <div class="row gy-2 overflow-hidden">
+                <div class="col-12">
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="AppUser.Username" class="form-control" />
+                        <ValidationMessage For="() => AppUser.Username" />
+                        @* <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required> *@
+                        <label for="email" class="form-label">نام کاربری</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating mb-3">
+                        <InputText  @bind-Value="AppUser.NickName" class="form-control" />
+                        <ValidationMessage For="() => AppUser.NickName" />
+                        @* <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required> *@
+                        <label for="password" class="form-label">نام و نام خانوادگی</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating mb-3">
+                        <InputText type="password" @bind-Value="AppUser.Password" class="form-control" />
+                        <ValidationMessage For="() => AppUser.Password" />
+                        @* <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required> *@
+                        <label for="password" class="form-label">رمز عبور</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="d-grid my-3">
+                        <button class="btn btn-primary btn-lg" type="submit">ثبت نام </button>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <p class="m-0 text-secondary text-center">حساب کاربری دارید ؟ <a href="/auth/login" class="link-primary text-decoration-none">وارد شوید</a></p>
+                </div>
             </div>
 
+
+
+
+
+
+
+        
         </EditForm>
         @if (isRegister)
         {
             <div class="alert alert-success mt-3">
-                succesfully register . please use <a class="btn btn-primary" href="/auth/login">login</a>
+                ثبت نام انجام شد  <a class="btn btn-primary" href="/auth/login">وارد حساب کاربری</a> شوید
             </div>
         }
         @if (mes!="")
@@ -40,6 +69,8 @@
                 <strong>@mes</strong>
             </div>
         }
+            </div>
+        </div>
     </div>
 </div>
 @inject DataContext dbcontext
@@ -54,7 +85,7 @@
     {
         if(dbcontext.AppUsers.Where(a => a.Username.ToLower() == AppUser.Username.ToLower()).Any())
         {
-            mes = "please select another username";
+            mes = "نام کاربری دیگری انتخاب نمایید";
             return;
         }
 

@@ -17,8 +17,9 @@
             <MudNavMenu Class="mud-width-full">
                 
                 <MudNavLink Href="/" Icon="@Icons.Material.Filled.Dashboard">مقالات</MudNavLink>
-                <MudNavLink Href="/auth/login" Icon="@Icons.Material.Filled.Login">ورود</MudNavLink>
-                <MudNavLink Href="/auth/register" Icon="@Icons.Material.Filled.GroupAdd">ثبت نام</MudNavLink>
+                <MudNavLink Href="/articles" Icon="@Icons.Material.Filled.ListAlt">مقالات من</MudNavLink>
+                <MudNavLink OnClick='() => nav.NavigateTo("/articles/add",true)'  Icon="@Icons.Material.Filled.Article">مقاله جدید</MudNavLink>
+                <MudNavLink Href="/auth/logout" Icon="@Icons.Material.Filled.Logout">خروج</MudNavLink>
                 
             </MudNavMenu>
         </MudPaper>
@@ -26,6 +27,7 @@
 }
 
 @rendermode InteractiveServer
+@inject NavigationManager nav
 @code {
     private bool _drawerOpen = false;
 
