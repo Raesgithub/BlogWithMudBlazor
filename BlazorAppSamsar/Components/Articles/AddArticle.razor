@@ -3,6 +3,7 @@
 @using BlazorAppSamsar.Models
 @using BlazorAppSamsar.Services
 @using System.ComponentModel.DataAnnotations
+@using BlazorAppSamsar.Statics
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using System.Security.Claims
@@ -12,50 +13,53 @@
 @attribute [Authorize]
 <EditForm Model="ArticalVM" Enhance FormName="f1" OnValidSubmit="Save">
 <div class="row mt-3">
-    
-        <div class="col-md-3">
-            @if (imagePreview != null)
-            {
-                <img src="@imagePreview" alt="پیش‌نمایش تصویر" style="max-width:300px; margin-bottom: 10px;" />
-            }
+    <div class="col-md-11 mx-auto p-md-2">
+        <div class="row">
+                <div class="col-md-3">
+                    <img src="@imagePreview" alt="پیش‌نمایش تصویر" style="width:100%;height:250px; margin-bottom: 10px;    display: block;
+    background: #ccc;" />
 
-            <InputFile OnChange="HandleSelected" accept="image/*" />
-            <br />
-            <button class="btn btn-primary mt-2" @onclick="UploadImage" disabled="@(!isImageSelected)">آپلود تصویر</button>
 
-        </div>
-        <div class="col-md-9 ">
+                    <InputFile OnChange="HandleSelected" accept="image/*" />
+                    @* <br />
+            <button class="btn btn-primary mt-2" @onclick="UploadImage" disabled="@(!isImageSelected)">آپلود تصویر</button> *@
 
-            <DataAnnotationsValidator />
-            <div class="mt-3">
-                <label class="form-label">عنوان</label>
-                <InputText @bind-Value="ArticalVM.Title" class="form-control" />
-                <ValidationMessage For="() => ArticalVM.Title" />
-            </div>
-            <div class="mt-3">
-                <label class="form-label">مقاله</label>
-                <CKEditorBlazor DisplayName="ck1" @bind-Value="ArticalVM.Content"></CKEditorBlazor>
-                <ValidationMessage For="() => ArticalVM.Content" />
-            </div>
-            <div class="mt-3">
-                <label class="form-label">وضعیت انتشار</label>
-                <InputSelect @bind-Value="ArticalVM.IsPublish" class="form-control">
-                    <option value="true" selected>منتشر شود</option>
-                    <option value="false">عدم انتشار</option>
-                </InputSelect>
-            </div>
-            <div class="mt-3">
-                <button class="btn btn-success" type="submit">ذخیره مقاله ...</button>
-            </div>
-
-            @if (mes != "")
-            {
-                <div class="mt-3 alert alert-info">
-                    <strong>@mes</strong>
                 </div>
-            }
+                <div class="col-md-9 ">
 
+                    <DataAnnotationsValidator />
+                    <div class="mt-3">
+                        <label class="form-label">عنوان</label>
+                        <InputText @bind-Value="ArticalVM.Title" class="form-control" />
+                        <ValidationMessage For="() => ArticalVM.Title" />
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label">مقاله</label>
+                        <CKEditorBlazor DisplayName="ck1" @bind-Value="ArticalVM.Content"></CKEditorBlazor>
+                        <ValidationMessage For="() => ArticalVM.Content" />
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label">وضعیت انتشار</label>
+                        <InputSelect @bind-Value="ArticalVM.IsPublish" class="form-control">
+                            <option value="true" selected>منتشر شود</option>
+                            <option value="false">عدم انتشار</option>
+                        </InputSelect>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-success" type="submit">ذخیره مقاله ...</button>
+                    </div>
+
+                    @if (mes != "")
+                    {
+                        <div class="mt-3 alert alert-info">
+                            <strong>@mes</strong>
+                        </div>
+                    }
+
+                </div>
         </div>
+    </div>
+        
     
 </div>
 </EditForm>
@@ -65,7 +69,7 @@
 @inject AuthenticationStateProvider stateProvider
 @inject IJSRuntime js
 @code {
-    string Image = "";
+    string filenameImage = "";
     List<IBrowserFile> files;
     private IBrowserFile selectedFile;
     private string imagePreview;
@@ -74,39 +78,33 @@
 
     private async Task HandleSelected(InputFileChangeEventArgs e)
     {
-        selectedFile = e.File;
-        isImageSelected = true;
+        if (e.File==null || e.File.Size==0)
+        {
+            return;
+        }
+        try
+        {
+            selectedFile = e.File;
+            isImageSelected = true;
 
-        // پیش‌نمایش تصویر
-        var buffer = new byte[selectedFile.Size];
-        await selectedFile.OpenReadStream().ReadAsync(buffer);
-        var base64 = Convert.ToBase64String(buffer);
-        imagePreview = $"data:{selectedFile.ContentType};base64,{base64}";
+            // پیش‌نمایش تصویر
+            var buffer = new byte[selectedFile.Size];
+            await selectedFile.OpenReadStream().ReadAsync(buffer);
+            var base64 = Convert.ToBase64String(buffer);
+            imagePreview = $"data:{selectedFile.ContentType};base64,{base64}";
+        }
+        catch (Exception)
+        {
+
+            return;
+        }
+
     }
 
     private async Task UploadImage()
     {
-        if (selectedFile != null)
-        {
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-
-            if (!Directory.Exists(uploadsFolder))
-                Directory.CreateDirectory(uploadsFolder);
-
-            var uniqueFileName = $"{Guid.NewGuid()}_{selectedFile.Name}";
-            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-            using var fileStream = new FileStream(filePath, FileMode.Create);
-            await selectedFile.OpenReadStream().CopyToAsync(fileStream);
-
-            // برای نمایش‌های بعدی: ذخیره مسیر فایل
-            UploadedImagesService.ImagePaths.Add($"uploads/{uniqueFileName}");
 
 
-            uploadSuccess = true;
-            imagePreview = null;
-            isImageSelected = false;
-        }
     }
     public class ArticalViewModel
     {
@@ -135,7 +133,26 @@
                 return;
             }
             Article article = new Article();
-            //map
+            try
+            {
+                if (selectedFile == null) return;
+                UploadFile uploadFile = new UploadFile();
+                var ext = new List<string>() { ".jpg", ".png", ".gif", ".jpeg" };
+                var res = await uploadFile.Upload(selectedFile, PathStatic.ArticleIMG, ext);
+                if (res.IsSuccess == false)
+                {
+                    mes = res.Message;
+                    return;
+                }
+
+                article.Image = res.Filename;
+
+            }
+            catch (Exception ex)
+            {
+
+                mes = ex.Message;
+            }
             article.Title = ArticalVM.Title;
             article.Content = ArticalVM.Content;
             article.Cdate = DateTime.Now;
@@ -143,12 +160,13 @@
             article.AuthorName = authState.User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Surname)!.Value;
             article.Views = 0;
             article.IsPublish = ArticalVM.IsPublish;
-            article.Image = Image;
 
             await dataContext.Articles.AddAsync(article);
             await dataContext.SaveChangesAsync();
             mes = "مقاله ذخیره شد";
             ArticalVM = new ArticalViewModel();
+            imagePreview = null;
+            selectedFile = null;
         }
         catch (Exception ex)
         {
@@ -159,42 +177,6 @@
 
 
     }
-    async void HandleInputFile(InputFileChangeEventArgs e)
-    {
-        if (e.FileCount > 4)
-        {
-            await js.InvokeVoidAsync("toastError", "حداکثر 4 تصویر میتوانید انتخاب نمایید");
-            return;
-        }
-        var selectedFiles = e.GetMultipleFiles(4).ToList();
-        if (selectedFiles != null && selectedFiles.Count > 0)
-        {
-            files = selectedFiles;
-        }
-    }
-
-    private async Task UploadFile(MouseEventArgs e)
-    {
-        var upload = new UploadFile();
-        if (files == null || files.Count == 0)
-        {
-            await js.InvokeVoidAsync("toastError", "فایلی انتخاب کنید");
-            return;
-        }
-        var res = await upload.Uploads(files, Statics.PathStatic.ArticleIMG,Services.IMGModes.Modes);
-
-        if (res.IsSuccess)
-        {
-           Image = res.Filename;
-            await js.InvokeVoidAsync("toast", "تصاویر انتخابی آپلود شدند");
-        }
-        else
-        {
-            await js.InvokeVoidAsync("toastError", res.Message);
-        }
-    }
-}
-
 
 }
-}
+

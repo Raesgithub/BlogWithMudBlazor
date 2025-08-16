@@ -82,13 +82,13 @@ namespace BlazorAppSamsar.Services
 
             }
             var filename =Path.GetFileName( Path.GetTempFileName() + $"{new Random().Next(1000)}{ext}");
-            //var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Cpanel", "assets", "images", "users");
+            var pathImage = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", path);
 
-            if (Directory.Exists(path) == false)
+            if (Directory.Exists(pathImage) == false)
             {
-                Directory.CreateDirectory(path);
+                Directory.CreateDirectory(pathImage);
             }
-            using (var stream = new FileStream(Path.Combine(path, filename), FileMode.Create))
+            using (var stream = new FileStream(Path.Combine(pathImage, filename), FileMode.Create))
             {
                 await file.OpenReadStream(maxAllowedSize: 10_000_000).CopyToAsync(stream);
             }
