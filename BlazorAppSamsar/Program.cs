@@ -1,5 +1,6 @@
 ﻿using BlazorAppSamsar.Components;
 using BlazorAppSamsar.Data;
+using BlazorAppSamsar.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -27,6 +28,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddSingleton<UploadedImagesService>();
 
 
 var app = builder.Build();

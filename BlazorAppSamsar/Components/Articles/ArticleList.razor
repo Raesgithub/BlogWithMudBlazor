@@ -1,6 +1,26 @@
 ﻿@page "/articles/"
+@using BlazorAppSamsar.Models
 @using Microsoft.AspNetCore.Components.Authorization
 
+@inject UploadedImagesService UploadedImages
+
+<h3>گالری تصاویر</h3>
+
+@if (UploadedImages.ImagePaths.Count == 0)
+{
+    <p>تصویری وجود ندارد.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var imagePath in UploadedImages.ImagePaths)
+        {
+            <div class="col-3 mb-3">
+                <img src="@imagePath" class="img-thumbnail" style="width: 100%; height: auto;" />
+            </div>
+        }
+    </div>
+}
 
 
 
