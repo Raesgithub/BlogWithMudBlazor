@@ -1,26 +1,115 @@
 ﻿@page "/articles/"
 @using BlazorAppSamsar.Models
-@using Microsoft.AspNetCore.Components.Authorization
+@using BlazorAppSamsar.Data
+@using System.Text.RegularExpressions
+@using System.Net
+@using Microsoft.EntityFrameworkCore
+@inject DataContext dataContext
+@inject NavigationManager nav
+@rendermode InteractiveServer
 
-@inject UploadedImagesService UploadedImages
 
-<h3>گالری تصاویر</h3>
+<h3 class="mb-4">لیست مقالات</h3>
 
-@if (UploadedImages.ImagePaths.Count == 0)
+@if (articles == null)
 {
-    <p>تصویری وجود ندارد.</p>
+    <p>در حال بارگذاری...</p>
+}
+else if (!articles.Any())
+{
+    <p>هیچ مقاله‌ای یافت نشد.</p>
 }
 else
 {
-    <div class="row">
-        @foreach (var imagePath in UploadedImages.ImagePaths)
+    <div class="container">
+        @foreach (var article in articles)
         {
-            <div class="col-3 mb-3">
-                <img src="@imagePath" class="img-thumbnail" style="width: 100%; height: auto;" />
+            <div class="d-flex align-items-center justify-content-between mb-3 p-2 border rounded shadow-sm">
+
+                <!-- بخش سمت راست: تصویر + متن -->
+                <div class="d-flex align-items-center">
+                    <img src="images/Articles/@article.Image"
+                         class="rounded-circle me-3"
+                         style="width:50px;height:50px;object-fit:cover;" />
+
+                    <div>
+                        <h6 class="fw-bold mb-1">@article.Title</h6>
+                        <p class="mb-0 text-muted">@GetPreview(article.Content, 32)</p>
+                    </div>
+                </div>
+
+                <!-- بخش سمت چپ: دکمه‌ها -->
+                <div class="d-flex gap-2">
+                    <!-- دکمه تغییر انتشار -->
+                    <button class="btn btn-sm @(article.IsPublish ? "btn-success" : "btn-secondary")"
+                            @onclick="async () => await TogglePublish(article)">
+                        @(article.IsPublish ? "منتشر شده" : "منتشر نشود")
+                    </button>
+
+                    <!-- دکمه ویرایش -->
+                    <button class="btn btn-sm btn-warning"
+                            @onclick="() => EditArticle(article.Id)">
+                        ویرایش
+                    </button>
+
+                    <!-- دکمه حذف -->
+                    <button class="btn btn-sm btn-danger"
+                            @onclick="async () => await DeleteArticle(article.Id)">
+                        حذف
+                    </button>
+                </div>
             </div>
         }
     </div>
 }
 
+@code {
+    private List<Article> articles;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadArticles();
+    }
 
+    private async Task LoadArticles()
+    {
+        articles = await dataContext.Articles
+            .OrderByDescending(a => a.Cdate)
+            .ToListAsync();
+    }
+
+    private static string GetPreview(string html, int max = 32)
+    {
+        if (string.IsNullOrWhiteSpace(html))
+            return string.Empty;
+
+        var noTags = Regex.Replace(html, "<.*?>", string.Empty, RegexOptions.Singleline);
+        noTags = WebUtility.HtmlDecode(noTags)?.Trim() ?? string.Empty;
+
+        return noTags.Length <= max ? noTags : noTags.Substring(0, max) + "…";
+    }
+
+    private async Task TogglePublish(Article article)
+    {
+        article.IsPublish = !article.IsPublish;
+        dataContext.Articles.Update(article);
+        await dataContext.SaveChangesAsync();
+        await LoadArticles();
+    }
+
+    private void EditArticle(int id)
+    {
+        nav.NavigateTo($"/articles/edit/{id}");
+    }
+
+    private async Task DeleteArticle(int id)
+    {
+        var article = await dataContext.Articles.FindAsync(id);
+        if (article != null)
+        {
+            dataContext.Articles.Remove(article);
+            await dataContext.SaveChangesAsync();
+            await LoadArticles();
+        }
+    }
+}
