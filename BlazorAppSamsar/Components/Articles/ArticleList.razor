@@ -9,6 +9,7 @@
 @rendermode InteractiveServer
 
 
+
 <h3 class="mb-4">لیست مقالات</h3>
 
 @if (articles == null)
@@ -41,9 +42,9 @@ else
                 <!-- بخش سمت چپ: دکمه‌ها -->
                 <div class="d-flex gap-2">
                     <!-- دکمه تغییر انتشار -->
-                    <button class="btn btn-sm @(article.IsPublish ? "btn-success" : "btn-secondary")"
+                    <button class="btn btn-sm @(article.IsPublish ? "btn-secondary" : "btn-success")"
                             @onclick="async () => await TogglePublish(article)">
-                        @(article.IsPublish ? "منتشر شده" : "منتشر نشود")
+                        @(article.IsPublish ? "لغو انتشار" : "منتشر شود")
                     </button>
 
                     <!-- دکمه ویرایش -->

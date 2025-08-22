@@ -137,6 +137,8 @@
                     Content = ArticalVM.Content,
                     Cdate = DateTime.Now,
                     AppUserUsername = authState.User.Identity.Name,
+                    AuthorName = authState.User.Claims.FirstOrDefault(a => a.Type == ClaimTypes.Surname)!.Value,
+                    Views = 0,
                     IsPublish = ArticalVM.IsPublish,
                     Image = await SaveImage(selectedFile)
                 };

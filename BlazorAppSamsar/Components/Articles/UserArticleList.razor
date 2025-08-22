@@ -1,0 +1,70 @@
+﻿@page "/articles/view/{ArticleId:int}"
+@using BlazorAppSamsar.Data
+@using BlazorAppSamsar.Models
+@using MD.PersianDateTime
+@inject DataContext dataContext
+@inject NavigationManager nav
+@rendermode InteractiveServer
+@if (article == null)
+{
+    <p>در حال بارگذاری...</p>
+}
+else
+{
+
+    <div class="d-flex" style="gap:20px; align-items:flex-start;">
+        <!-- سمت راست: تصویر و نویسنده -->
+
+        <div style="text-align:center;">
+            <img src="@imagePath" style="width:500px;height:500px;object-fit:cover;border-radius:8px;margin-top:25px;margin-right:18px" />
+            <p style="text-align:right" class="mt-3 mr-6 fw-bold">
+
+                <span style="float:right"> @article.AuthorName </span>
+                <span style="float:right" class="mr-5">
+                    <p>
+                        @article.Views
+                        <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" />
+                    </p>
+                </span>
+
+                <span style="float:left">
+                    <p>
+                        @(new PersianDateTime(article.Cdate).ToShortDate1String())
+                        <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" />
+                    </p>
+                </span>
+            </p>
+           
+        </div>
+
+        <!-- سمت چپ: عنوان و متن مقاله -->
+        <div style="flex:1;">
+
+            <h3 style="margin-top:50px" class="text-center" >@article.Title</h3>
+            <div style="text-align:center;margin-top:40px">
+                @((MarkupString)article.Content)
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int ArticleId { get; set; }
+    private Article article;
+    private string imagePath;
+
+    protected override async Task OnInitializedAsync()
+    {
+        article = await dataContext.Articles.FindAsync(ArticleId);
+        if (article != null)
+        {
+            imagePath = string.IsNullOrEmpty(article.Image)
+                ? "/images/Articles/default.png"
+                : $"/images/Articles/{article.Image}";
+        }
+        else
+        {
+            nav.NavigateTo("/articles");
+        }
+    }
+}
