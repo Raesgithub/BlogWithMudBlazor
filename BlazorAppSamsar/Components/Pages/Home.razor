@@ -6,7 +6,7 @@
 @using MD.PersianDateTime
 @inject DataContext dataContext
 @inject NavigationManager nav
-
+@rendermode InteractiveServer
 <div class="row">
     @if (articles == null)
     {
@@ -22,41 +22,40 @@
         @foreach (var article in articles)
         {
             var path = $"images/Articles/{article.Image}";
-            <div class="col-sm-6 col-md-4 col-xl-3  mt-3 shadow col">
+            <div class="col-sm-6 col-md-4 col-xl-3  mt-3 shadow col position-relative">
                 <MudCard>
-                    <!-- تصویر نویسنده -->
                     <MudCardMedia Image="@path" Height="250" />
-
                     <MudCardContent>
-                        <!-- نام نویسنده -->
                         <MudText Typo="Typo.h5">@article.Title</MudText>
                         <br />
-                        <!-- توضیح کوتاه مقاله -->
                         <MudText Typo="Typo.body2">
                             @GetPreview(article.Content, 50)
                         </MudText>
-                        <p class="mt-5" >
-                        <p> @article.AuthorName</p>
-                        
-                            <span style="float:right">
-                            <p> 
-                             @article.Views  
-                             <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" />
-                            </p>
+                        <p class="mt-5">
+                            <div class="position-absolute" style="top:10px;right:30px;background-color:skyblue;border-radius:15%">
+                            <span style="color:black;margin:7px 7px 7px 7px" >
+                                @article.AuthorName
                             </span>
-                        
-                            <span style="float:left">  
+                            </div>
+                            <span style="float:right">
                                 <p>
-                                @(new PersianDateTime(article.Cdate).ToShortDate1String())
-                                <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" />
+                                    @article.Views
+                                    <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" />
                                 </p>
-                        </span>
+                            </span>
+
+                            <span style="float:left">
+                                <p>
+                                    @(new PersianDateTime(article.Cdate).ToShortDate1String())
+                                    <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" />
+                                </p>
+                            </span>
                         </p>
-
-                        <a href="/articles/view/@article.Id" class="d-block m-auto mt-15 ">
-                            دیدن ادامه مقاله ⇚
+                        <div style="margin-top:70px; margin-bottom:-30px">
+                            <a href="/articles/view/@article.Id" class="m-auto d-block btn btn-sm btn-outline-info">
+                           ادامه مطلب ⇚
                         </a>
-
+                        </div>
                     </MudCardContent>
 
                     <MudCardActions>
