@@ -63,10 +63,12 @@ else
         }
     </div>
 }
-
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inject AuthenticationStateProvider authenticationStateProvider
 @code {
     private List<Article> articles;
-
+    
     protected override async Task OnInitializedAsync()
     {
         await LoadArticles();
@@ -74,9 +76,14 @@ else
 
     private async Task LoadArticles()
     {
-        articles = await dataContext.Articles
-            .OrderByDescending(a => a.Cdate)
-            .ToListAsync();
+        
+            var user=await authenticationStateProvider.GetAuthenticationStateAsync();
+            
+            articles = await dataContext.Articles.Where(a => a.AppUserUsername == user.User.Identity.Name)
+                .OrderByDescending(a => a.Cdate)
+                .ToListAsync();
+        
+        
     }
 
     private static string GetPreview(string html, int max = 32)

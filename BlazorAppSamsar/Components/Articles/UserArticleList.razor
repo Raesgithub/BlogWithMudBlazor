@@ -4,6 +4,7 @@
 @using MD.PersianDateTime
 @inject DataContext dataContext
 @inject NavigationManager nav
+
 @rendermode InteractiveServer
 @if (article == null)
 {
@@ -50,6 +51,9 @@ else
 
 @code {
     [Parameter] public int ArticleId { get; set; }
+
+    
+
     private Article article;
     private string imagePath;
 
