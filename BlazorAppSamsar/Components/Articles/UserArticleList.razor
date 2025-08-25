@@ -41,9 +41,14 @@ else
         <!-- سمت چپ: عنوان و متن مقاله -->
         <div style="flex:1;">
 
-            <h3 style="margin-top:50px" class="text-center" >@article.Title</h3>
-            <div style="text-align:center;margin-top:40px">
+            <h3  class="my-5" >@article.Title</h3>
+            <div >
                 @((MarkupString)article.Content)
+            </div>
+            <div class="text-center">
+                <a href="/">
+                     <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Large" Color="Color.Primary" />
+                </a>
             </div>
         </div>
     </div>

@@ -18,7 +18,17 @@
 }
 else if (!articles.Any())
 {
-    <p>هیچ مقاله‌ای یافت نشد.</p>
+    <div class="row">
+        <div class="col-md-4 mx-auto mt-4">
+            <img src="/images/flower.jpg" class="img-fluid d-block"/>
+            <p>هیچ مقاله‌ای یافت نشد.</p>
+            <a href="/">
+                <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Large" Color="Color.Primary" />
+            </a>
+        </div>
+        
+    </div>
+    
 }
 else
 {
