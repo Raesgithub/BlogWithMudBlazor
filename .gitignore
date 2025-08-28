@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/BlazorAppSamsar/samyar.db
+/BlazorAppSamsar/samyar.db-shm
+/BlazorAppSamsar/samyar.db-wal
