@@ -12,13 +12,13 @@
 </MudAppBar>
 @if (_drawerOpen)
 {
-    <MudDrawer  ClipMode="DrawerClipMode.Always" Elevation="1" Style="height:100vh;right:0;display:flex !important;top:60px;padding-bottom:10px">
-        <MudPaper Width="250px" Class="d-inline-flex py-3 " Elevation="0">
-            <MudNavMenu Class="mud-width-full">
+    <MudDrawer ClipMode="DrawerClipMode.Always" Elevation="1" Style="background:#56ACD6;height:100vh;right:0;display:flex !important;top:60px;padding-bottom:10px">
+        <MudPaper Style="background:#56ACD6" Width="250px" Class="d-inline-flex py-3 " Elevation="0">
+            <MudNavMenu  Class="mud-width-full">
 
-                <MudNavLink OnClick='() => GotoLink("/")' Icon="@Icons.Material.Filled.Dashboard">مقالات</MudNavLink>
-                <MudNavLink OnClick='() => GotoLink("/auth/login")'  Icon="@Icons.Material.Filled.Login">ورود</MudNavLink>
-                <MudNavLink OnClick='() => GotoLink("/auth/register")'  Icon="@Icons.Material.Filled.GroupAdd">ثبت نام</MudNavLink>
+                <MudNavLink  OnClick='() => GotoLink("/")' Icon="@Icons.Material.Filled.Dashboard">مقالات</MudNavLink>
+                <MudNavLink  OnClick='() => GotoLink("/auth/login")' Icon="@Icons.Material.Filled.Login">ورود</MudNavLink>
+                <MudNavLink  OnClick='() => GotoLink("/auth/register")' Icon="@Icons.Material.Filled.GroupAdd">ثبت نام</MudNavLink>
             </MudNavMenu>
         </MudPaper>
     </MudDrawer>

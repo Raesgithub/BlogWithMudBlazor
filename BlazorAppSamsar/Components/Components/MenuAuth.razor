@@ -12,14 +12,14 @@
 </MudAppBar>
 @if (_drawerOpen)
 {
-    <MudDrawer  ClipMode="DrawerClipMode.Always" Elevation="1" Style="height:100vh;right:0;display:flex !important;top:60px;padding-bottom:10px">
-        <MudPaper Width="250px" Class="d-inline-flex py-3 " Elevation="0">
-            <MudNavMenu Class="mud-width-full">
+    <MudDrawer ClipMode="DrawerClipMode.Always" Elevation="1" Style=" background-color:#00DDFF;height:1500px;right:0;display:flex !important;top:60px;padding-bottom:10px;overflow:hidden">
+        <MudPaper Style="background:#00DDFF" Width="250px" Class="d-inline-flex py-3 " Elevation="0">
+            <MudNavMenu  Class="mud-width-full">
 
-                <MudNavLink OnClick='()=>GotoLink("/")' Icon="@Icons.Material.Filled.Dashboard">مقالات</MudNavLink>
-                <MudNavLink OnClick='() => GotoLink("/articles")'  Icon="@Icons.Material.Filled.ListAlt">مقالات من</MudNavLink>
-                <MudNavLink OnClick='()=>GotoLink("/articles/add",true)'  Icon="@Icons.Material.Filled.Article">مقاله جدید</MudNavLink>
-                <MudNavLink OnClick='() => GotoLink("/auth/logout")'  Icon="@Icons.Material.Filled.Logout">خروج</MudNavLink>
+                <MudNavLink  OnClick='() => GotoLink("/")' Icon="@Icons.Material.Filled.Dashboard">مقالات</MudNavLink>
+                <MudNavLink  OnClick='() => GotoLink("/articles")' Icon="@Icons.Material.Filled.ListAlt">مقالات من</MudNavLink>
+                <MudNavLink  OnClick='() => GotoLink("/articles/add", true)' Icon="@Icons.Material.Filled.Article">مقاله جدید</MudNavLink>
+                <MudNavLink  OnClick='() => GotoLink("/auth/logout")' Icon="@Icons.Material.Filled.Logout">خروج</MudNavLink>
                 
             </MudNavMenu>
         </MudPaper>
