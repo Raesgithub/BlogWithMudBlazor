@@ -15,16 +15,15 @@
     <MudDrawer  ClipMode="DrawerClipMode.Always" Elevation="1" Style="height:100vh;right:0;display:flex !important;top:60px;padding-bottom:10px">
         <MudPaper Width="250px" Class="d-inline-flex py-3 " Elevation="0">
             <MudNavMenu Class="mud-width-full">
-                
-                <MudNavLink Href="/" Icon="@Icons.Material.Filled.Dashboard">مقالات</MudNavLink>
-                <MudNavLink Href="/auth/login" Icon="@Icons.Material.Filled.Login">ورود</MudNavLink>
-                <MudNavLink Href="/auth/register" Icon="@Icons.Material.Filled.GroupAdd">ثبت نام</MudNavLink>
-                
+
+                <MudNavLink OnClick='() => GotoLink("/")' Icon="@Icons.Material.Filled.Dashboard">مقالات</MudNavLink>
+                <MudNavLink OnClick='() => GotoLink("/auth/login")'  Icon="@Icons.Material.Filled.Login">ورود</MudNavLink>
+                <MudNavLink OnClick='() => GotoLink("/auth/register")'  Icon="@Icons.Material.Filled.GroupAdd">ثبت نام</MudNavLink>
             </MudNavMenu>
         </MudPaper>
     </MudDrawer>
 }
-
+@inject NavigationManager nav
 @rendermode InteractiveServer
 @code {
     private bool _drawerOpen = false;
@@ -33,5 +32,12 @@
     {
         _drawerOpen = !_drawerOpen;
         StateHasChanged();
+    }
+    private void GotoLink(string url, bool isReload = false)
+    {
+        nav.NavigateTo(url, isReload);
+        DrawerToggle();
+
+
     }
 }
