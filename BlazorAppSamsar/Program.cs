@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
-builder.Services.AddDbContext<DataContext>(item => item.UseSqlite("data source=samyar.db"));
+builder.Services.AddDbContext<DataContext>(item => item.UseSqlite("data source=c:\\samyardb\\samyar.db"));
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(a =>
     {
