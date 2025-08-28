@@ -10,7 +10,7 @@
 
 
 
-<h3 class="mb-4">لیست مقالات</h3>
+<h3 class="mt-5 mr-5"> لیست مقالات من</h3>
 
 @if (articles == null)
 {
@@ -18,15 +18,14 @@
 }
 else if (!articles.Any())
 {
-    <div class="row">
-        <div class="col-md-4 mx-auto mt-4">
-            <img src="/images/flower.jpg" class="img-fluid d-block"/>
-            <p>هیچ مقاله‌ای یافت نشد.</p>
-            <a href="/">
-                <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Large" Color="Color.Primary" />
-            </a>
-        </div>
-        
+    <div style="margin-top:150px">
+        <img src="/images/nonList.png" style="width:600px;height:300px;border-radius:5%;display:block;margin:auto" />
+        <p class="text-center mt-3">هیچ مقاله‌ای یافت نشد !</p>
+        <div class="text-center">
+        <a href="/" >
+            <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Large" Color="Color.Primary" />
+        </a>
+            </div>
     </div>
     
 }
