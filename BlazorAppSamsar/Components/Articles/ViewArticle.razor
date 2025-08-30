@@ -2,24 +2,23 @@
 @using BlazorAppSamsar.Data
 @using BlazorAppSamsar.Models
 @using MD.PersianDateTime
+@using Microsoft.EntityFrameworkCore
 @inject DataContext dataContext
 @inject NavigationManager nav
 
 @rendermode InteractiveServer
+
 @if (article == null)
 {
     <p>در حال بارگذاری...</p>
 }
 else
 {
-
     <div class="d-flex" style="gap:20px; align-items:flex-start;">
         <!-- سمت راست: تصویر و نویسنده -->
-
         <div style="text-align:center;">
             <img src="@imagePath" style="width:500px;height:500px;object-fit:cover;border-radius:8px;margin-top:25px;margin-right:18px" />
             <p style="text-align:right" class="mt-3 mr-6 fw-bold">
-
                 <span style="float:right"> @article.AuthorName </span>
                 <span style="float:right" class="mr-5">
                     <p>
@@ -27,7 +26,6 @@ else
                         <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" />
                     </p>
                 </span>
-
                 <span style="float:left">
                     <p>
                         @(new PersianDateTime(article.Cdate).ToShortDate1String())
@@ -35,19 +33,17 @@ else
                     </p>
                 </span>
             </p>
-           
         </div>
 
         <!-- سمت چپ: عنوان و متن مقاله -->
         <div style="flex:1;">
-
-            <h3  class="my-5" >@article.Title</h3>
-            <div >
+            <h3 class="my-5">@article.Title</h3>
+            <div>
                 @((MarkupString)article.Content)
             </div>
             <div class="text-center">
                 <a href="/">
-                     <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Large" Color="Color.Primary" />
+                    <MudIcon Icon="@Icons.Material.Filled.Home" Size="Size.Large" Color="Color.Primary" />
                 </a>
             </div>
         </div>
@@ -57,14 +53,23 @@ else
 @code {
     [Parameter] public int ArticleId { get; set; }
 
-    
-
     private Article article;
     private string imagePath;
+    private bool _viewCounted = false;
 
     protected override async Task OnInitializedAsync()
     {
-        article = await dataContext.Articles.FindAsync(ArticleId);
+        if (ArticleId <= 0)
+        {
+            nav.NavigateTo("/articles");
+            return;
+        }
+
+        article = await dataContext.Articles
+            .Where(a => a.IsPublish == true && a.Id == ArticleId)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+
         if (article != null)
         {
             imagePath = string.IsNullOrEmpty(article.Image)
@@ -74,6 +79,25 @@ else
         else
         {
             nav.NavigateTo("/articles");
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && article != null && !_viewCounted)
+        {
+            _viewCounted = true;
+
+            var dbArticle = await dataContext.Articles.FirstOrDefaultAsync(a => a.Id == ArticleId);
+            if (dbArticle != null)
+            {
+                dbArticle.Views++;
+                dataContext.Articles.Update(dbArticle);
+                await dataContext.SaveChangesAsync();
+
+                article.Views = dbArticle.Views; // به‌روزرسانی برای نمایش درست
+                StateHasChanged();
+            }
         }
     }
 }
